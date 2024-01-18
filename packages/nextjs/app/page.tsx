@@ -1,61 +1,62 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useAccount } from "wagmi";
+import { ArrowSmallRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import CreateMeme from "~~/components/home/CreateMeme";
+import ExploreMemes from "~~/components/home/ExploreMemes";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 const Home: NextPage = () => {
+  const [selectedOption, setSelectedOption] = useState("create");
+
+  const renderContent = () => {
+    switch (selectedOption) {
+      case "create":
+        return <CreateMeme />; // Component for meme creation (the one we previously made)
+      case "explore":
+        return <ExploreMemes />; // Component for exploring memes
+      case "portfolio":
+      // return <Portfolio />; // Component for the user's portfolio
+      default:
+        return null;
+    }
+  };
+
   return (
-    <>
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center mb-8">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/pages/index.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      {/* Simulated phone screen container */}
+      <div className="relative w-full max-w-sm mx-auto bg-white shadow-lg" style={{ height: "640px" }}>
+        {/* Content area */}
+        <div className="overflow-y-auto" style={{ paddingBottom: "60px" }}>
+          {renderContent()}
         </div>
 
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contract
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-          </div>
+        {/* Navigation bar */}
+        <div className="bg-black p-4 absolute bottom-0 w-full flex justify-around text-white">
+          <button
+            className={`btn ${selectedOption === "create" ? "btn-active" : ""}`}
+            onClick={() => setSelectedOption("create")}
+          >
+            Create
+          </button>
+          <button
+            className={`btn ${selectedOption === "explore" ? "btn-active" : ""}`}
+            onClick={() => setSelectedOption("explore")}
+          >
+            Explore
+          </button>
+          <button
+            className={`btn ${selectedOption === "portfolio" ? "btn-active" : ""}`}
+            onClick={() => setSelectedOption("portfolio")}
+          >
+            Portfolio
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
-
 export default Home;

@@ -21,10 +21,40 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
+  const weth = await deploy("WETH", {
     from: deployer,
     // Contract constructor arguments
-    args: [deployer],
+    args: [],
+    log: true,
+    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+    // automatically mining the contract deployment transaction. There is no effect on live networks.
+    autoMine: true,
+  });
+
+  const factory = await deploy("MemeFactory", {
+    from: deployer,
+    // Contract constructor arguments
+    args: [weth.address, deployer],
+    log: true,
+    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+    // automatically mining the contract deployment transaction. There is no effect on live networks.
+    autoMine: true,
+  });
+
+  const multicall = await deploy("MemeMulticall", {
+    from: deployer,
+    // Contract constructor arguments
+    args: [factory.address, weth.address],
+    log: true,
+    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+    // automatically mining the contract deployment transaction. There is no effect on live networks.
+    autoMine: true,
+  });
+
+  const router = await deploy("MemeRouter", {
+    from: deployer,
+    // Contract constructor arguments
+    args: [factory.address, weth.address],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
